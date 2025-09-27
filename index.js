@@ -5,6 +5,8 @@ const FormData = require("form-data");
 const fs = require("fs");
 const multer = require("multer");
 const OpenAI = require("openai");
+// web3 integration
+const { ethers } = require("ethers");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +23,36 @@ const openai = new OpenAI({
 });
 
 app.use(express.json({ limit: "5mb" }));
+
+// read abi file
+const ABI = JSON.parse(fs.readFileSync("abi.json"));
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+const PROVIDER_URL = process.env.PROVIDER_URL;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
+// calls the slash function
+app.get("/slash", async (_req, res) => {
+  // get address from params
+  const address = _req.query.address;
+
+  if (!address) {
+    return res.status(400).json({ error: "Address is required" });
+  }
+
+  try {
+    const provider = new ethers.JsonRpcProvider(PROVIDER_URL);
+    const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
+
+    const tx = await contract.slash(address);
+    await tx.wait();
+
+    res.json({ success: true, txHash: tx.hash });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to slash", details: error.message });
+  }
+});
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
