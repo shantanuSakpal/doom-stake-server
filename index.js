@@ -162,9 +162,9 @@ app.post("/buckets/:bucketName/files", async (req, res) => {
 });
 
 // Pinata Upload - Upload an image to Pinata using direct curl-style request
-app.post("/pinata/upload", upload.single("image"), async (req, res) => {
+app.post("/upload-image", upload.single("image"), async (req, res) => {
   const pinataJwt = process.env.PINATA_SECRET_ACCESS_TOKEN;
-  const pintaBaseUrl =
+  const pinataBaseUrl =
     process.env.PINATA_GATEWAY || "https://gateway.pinata.cloud";
   if (!pinataJwt) {
     return res.status(500).json({
@@ -238,7 +238,7 @@ app.post("/pinata/upload", upload.single("image"), async (req, res) => {
       throw new Error("Pinata response missing CID.");
     }
 
-    const fileUrl = `${pintaBaseUrl}/ipfs/${data.cid}`;
+    const fileUrl = `${pinataBaseUrl}/ipfs/${data.cid}`;
 
     // res.json({
     //   id: data.id,
@@ -337,6 +337,7 @@ app.post("/pinata/upload", upload.single("image"), async (req, res) => {
       ? true
       : false;
     res.json({
+      fileUrl: fileUrl,
       modelResponse: modelResponse,
     });
   } catch (error) {
