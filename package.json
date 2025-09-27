@@ -1,0 +1,23 @@
+{
+  "name": "touch_grass_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js ",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "form-data": "^4.0.4",
+    "fs": "^0.0.1-security",
+    "multer": "^2.0.2",
+    "openai": "^5.23.1"
+  }
+}
