@@ -34,7 +34,7 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 app.get("/slash", async (_req, res) => {
   // get address from params
   const address = _req.query.address;
-
+  console.log(address);
   if (!address) {
     return res.status(400).json({ error: "Address is required" });
   }
